@@ -237,9 +237,8 @@ static ngx_int_t ngx_http_init_sticky_peer(ngx_http_request_t *r, ngx_http_upstr
 				} //%note: Seems like here would need to add an else { assign random peer }
 			}
 			if(iphp->selected_peer == -1) {
-				ngx_uint_t r = rand() % iphp->rrp.peers->number;
-				iphp->selected_peer = r;
-				ngx_log_debug(NGX_LOG_DEBUG_HTTP, r->connection->log, 0, "[sticky/init_sticky_peer] the route \"%V\" randomly selected peer at index %ui", &route, r);
+				ngx_uint_t rand_num = rand() % iphp->rrp.peers->number;
+				iphp->selected_peer = rand_num;
 				return NGX_OK;
 			}
 
