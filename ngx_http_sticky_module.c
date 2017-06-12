@@ -236,12 +236,6 @@ static ngx_int_t ngx_http_init_sticky_peer(ngx_http_request_t *r, ngx_http_upstr
 					return NGX_OK;
 				} //%note: Seems like here would need to add an else { assign random peer }
 			}
-			if(iphp->selected_peer == -1) {
-				ngx_uint_t rand_num = rand() % iphp->rrp.peers->number;
-				iphp->selected_peer = rand_num;
-				return NGX_OK;
-			}
-
 		} else {
 
 			/* switch back to index, just convert to integer and ensure it corresponds to a valid peer */
@@ -349,8 +343,8 @@ static ngx_int_t ngx_http_get_sticky_peer(ngx_peer_connection_t *pc, void *data)
 		iphp->rrp.current = peer;
 #else
 		iphp->rrp.current = iphp->selected_peer;
-#endif		
-		
+#endif
+
 		pc->cached = 0;
 		pc->connection = NULL;
 		pc->sockaddr = peer->sockaddr;
@@ -689,7 +683,7 @@ static char *ngx_http_sticky_set(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
 	upstream_conf = ngx_http_conf_get_module_srv_conf(cf, ngx_http_upstream_module);
 
-	/* 
+	/*
 	 * ensure another upstream module has not been already loaded
 	 * peer.init_upstream is set to null and the upstream module use RR if not set
 	 * But this check only works when the other module is declared before sticky
